@@ -3,6 +3,7 @@
   "compilerOptions": {
     "allowJs": true,
     "sourceMap": true,
+    "moduleResolution": "Bundler",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
@@ -12,12 +13,12 @@
       "@dcloudio/types",
       "miniprogram-api-typings",
       "@uni-helper/uni-app-types",
+      "@uni-helper/uni-types",
       "@uni-helper/uni-ui-types"
     ]
   },
   "vueCompilerOptions": {
-    // experimentalRuntimeMode 已废弃，请升级 Vue - Official 插件至最新版本
-    "plugins": ["@uni-helper/uni-app-types/volar-plugin"]
+    "plugins": ["@uni-helper/uni-types/volar-plugin"]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "*.d.ts"]
 }
