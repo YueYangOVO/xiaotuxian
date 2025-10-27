@@ -49,3 +49,64 @@ const httpInterceptor = {
 uni.addInterceptor('request', httpInterceptor)
 //添加拦截器 拦截uploadFile文件上传
 uni.addInterceptor('uploadFile', httpInterceptor)
+
+/**
+ * 请求函数
+ * @param  UniApp.RequestOptions
+ * @returns Promise
+ *  1. 返回 Promise 对象，用于处理返回值类型
+ *  2. 获取数据成功
+ *    2.1 提取核心数据 res.data
+ *    2.2 添加类型，支持泛型
+ *  3. 获取数据失败
+ *    3.1 401错误  -> 清理用户信息，跳转到登录页
+ *    3.2 其他错误 -> 根据后端错误信息轻提示
+ *    3.3 网络错误 -> 提示用户换网络
+ */
+
+//给Promise添加返回数据的类型 支持泛型 T是泛型参数，用于指定返回数据的类型
+interface Data<T> {
+  code: string
+  msg: string
+  data: T
+}
+
+//2.2设置返回数据的类型为Data<T>
+export const http = <T>(options: UniApp.RequestOptions) => {
+  //1.返回Promise对象
+  return new Promise<Data<T>>((resolve, reject) => {
+    uni.request({
+      ...options,
+      //请求响应成功
+      success(res) {
+        // 状态码2xx 表示请求成功
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          //2.1 提取核心数据 res.data
+          resolve(res.data as Data<T>)
+        } else if (res.statusCode === 401) {
+          //401错误  -> 清理用户信息，跳转到登录页
+          useMemberStore().clearProfile()
+          uni.navigateTo({ url: '/pages/login/login' })
+          reject(res)
+        } else {
+          //其他错误， =》根据后端错误提示显示
+          uni.showToast({
+            icon: 'none',
+            title: (res.data as Data<T>).msg || '请求失败',
+            mask: true,
+          })
+          reject(res)
+        }
+      },
+      //请求相应失败 这里主要是用户的网络没了， success主要是后端发过来信息就是成功
+      fail(err) {
+        uni.showToast({
+          icon: 'none',
+          title: '网络错误 请稍后试试',
+          mask: true,
+        })
+        reject(err)
+      },
+    })
+  })
+}

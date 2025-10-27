@@ -21,28 +21,16 @@
 
 <script setup lang="ts">
 import { useMemberStore } from '@/stores'
-
+import { http } from '@/utils/http'
 const memberStore = useMemberStore()
 
-function sendMsg() {
-  uni.request({
-    url: '/home/banner',
+const sendMsg = async () => {
+  const res = await http<string[]>({
+    url: '',
     method: 'GET',
-    success: (res) => {
-      console.log('请求成功:', res)
-      uni.showToast({
-        title: '请求成功',
-        icon: 'success',
-      })
-    },
-    fail: (err) => {
-      console.error('请求失败:', err)
-      uni.showToast({
-        title: '请求失败',
-        icon: 'error',
-      })
-    },
+    header: {},
   })
+  console.log(res)
 }
 </script>
 

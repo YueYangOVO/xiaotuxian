@@ -1,12 +1,13 @@
-<script setup lang="ts">
-//
-</script>
-
 <template>
   <view class="index">
-    <uni-card title="商品列表">有人吗</uni-card>
+    <CustomNavbar></CustomNavbar>
   </view>
 </template>
+<script setup lang="ts">
+// 引入自定义导航条组件
+import CustomNavbar from './components/CustomNavbar.vue'
+//获取手机屏幕的安全区域
+</script>
 
 <style lang="scss">
 //
