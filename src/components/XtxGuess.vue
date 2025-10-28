@@ -7,19 +7,15 @@
   <view class="guess">
     <navigator
       class="guess-item"
-      v-for="item in 10"
-      :key="item"
+      v-for="item in guessList"
+      :key="item.id"
       :url="`/pages/goods/goods?id=4007498`"
     >
-      <image
-        class="image"
-        mode="aspectFill"
-        src="https://pcapi-xiaotuxian-front-devtest.itheima.net/miniapp/uploads/goods_big_1.jpg"
-      ></image>
-      <view class="name"> 德国THORE男表 超薄手表男士休闲简约夜光石英防水直径40毫米 </view>
+      <image class="image" mode="aspectFill" :src="item.picture"></image>
+      <view class="name"> {{ item.name }} </view>
       <view class="price">
         <text class="small">¥</text>
-        <text>899.00</text>
+        <text>{{ item.price }}</text>
       </view>
     </navigator>
   </view>
@@ -27,7 +23,40 @@
 </template>
 
 <script setup lang="ts">
-//
+// 获取猜你喜欢的公共数据，因为这是个公共组件，我们直接在组件内拿数据
+//不同页面调用数据是一样的
+import { ref } from 'vue'
+import { getHomeGuessLikeAPI } from '@/services/home'
+import type { GuessItem } from '@/types/home'
+import type { PageParams } from '@/types/global'
+import { onMounted } from 'vue'
+
+//定义分页查询参数
+const pageParams = ref<PageParams>({
+  page: 1,
+  pageSize: 10,
+})
+
+//1. start ==================获取分页查询数据===============
+//查询结果集合
+const guessList = ref<GuessItem[]>([])
+//调用接口 获取分页查询数据
+const getGuessLike = async () => {
+  const res = await getHomeGuessLikeAPI(pageParams.value)
+  //console.log(res.result.items)
+  guessList.value = res.result.items
+}
+
+//将查询列表数据暴漏给父组件使用
+defineExpose({
+  getMore: getGuessLike,
+})
+// end -------------------------------------------------------
+
+//这里使用组件挂载完毕 调用
+onMounted(() => {
+  getGuessLike()
+})
 </script>
 
 <style lang="scss">

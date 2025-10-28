@@ -32,7 +32,7 @@ const props = defineProps<{
 const activeIndex = ref(0)
 //当swiper中当前项改变时会触发这个change事件 通过e获取当前索引项
 const handleChange: UniHelper.SwiperOnChange = (e) => {
-  console.log('轮播图当前下标: ' + e.detail.current)
+  // console.log('轮播图当前下标: ' + e.detail.current)
   //这里 ！感叹号 非空断言 告诉ts编译器 我确定e.detail.current 不会为空
   //这里不能使用？ 不然current会是一个number | undefined 类型
   activeIndex.value = e.detail!.current

@@ -1,12 +1,12 @@
 <template>
   <CustomNavbar></CustomNavbar>
-  <!-- 将主页面添加到scroll中，可以不让自定义头部跟着页面滚动 -->
-  <scroll-view scroll-y class="scroll-view">
+  <!-- 滚动容器 将主页面添加到scroll中，可以不让自定义头部跟着页面滚动 -->
+  <scroll-view @scrolltolower="onScrollToLower" scroll-y class="scroll-view">
     <XtxSwiper :bannerList="bannerList" />
     <CategoryPanel :categoryList="categoryList"></CategoryPanel>
     <HotPanel :hotList="hotList"></HotPanel>
     <!-- 导入公共组件 猜你喜欢 -->
-    <XtxGuess></XtxGuess>
+    <XtxGuess ref="guessRef"></XtxGuess>
   </scroll-view>
 </template>
 <script setup lang="ts">
@@ -18,6 +18,7 @@ import CustomNavbar from './components/CustomNavbar.vue'
 import HotPanel from './components/HotPanel.vue'
 import { getHomeBannerAPI, getCategoryAPI, getHotItemAPI } from '@/services/home'
 import type { BannerItem, CategoryItem, HotItem } from '@/types/home'
+import type { XtxGuessInstance } from '@/types/component'
 
 //1. ============ start 首页广告区域的轮播图 =============
 //存放首页广告数据的数组
@@ -48,6 +49,16 @@ const getHotItem = async () => {
   hotList.value = res.result
 }
 // ----------------- end 首页热门推荐 -----------------
+
+//4. ============ start 滚动容器scroll添加 滚动触底事件  =============
+//获取猜你喜欢组件的实例对象
+const guessRef = ref<XtxGuessInstance>()
+const onScrollToLower = () => {
+  console.log('滚动触底了')
+  guessRef.value?.getMore()
+}
+
+//------------------end 滚动容器scroll添加 滚动触底事件  =============
 
 onLoad(() => {
   getHomeBanner()
