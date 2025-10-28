@@ -68,7 +68,7 @@ uni.addInterceptor('uploadFile', httpInterceptor)
 interface Data<T> {
   code: string
   msg: string
-  data: T
+  result: T
 }
 
 //2.2设置返回数据的类型为Data<T>
