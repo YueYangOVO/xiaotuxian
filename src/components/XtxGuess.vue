@@ -19,7 +19,7 @@
       </view>
     </navigator>
   </view>
-  <view class="loading-text"> 正在加载... </view>
+  <view class="loading-text">{{ isBottom ? '没有更多了~' : '正在加载...' }}</view>
 </template>
 
 <script setup lang="ts">
@@ -32,19 +32,39 @@ import type { PageParams } from '@/types/global'
 import { onMounted } from 'vue'
 
 //定义分页查询参数
-const pageParams = ref<PageParams>({
-  page: 1,
+//因为我们在调用接口时设置了分页参数可以不传递这会导致他undefined
+//所以这里我们使用required 来告诉ts 这个pageParams 必须有这两个属性
+const pageParams: Required<PageParams> = {
+  page: 30,
   pageSize: 10,
-})
+}
 
 //1. start ==================获取分页查询数据===============
 //查询结果集合
 const guessList = ref<GuessItem[]>([])
+//定义查询到页面底部的参数
+const isBottom = ref(false)
 //调用接口 获取分页查询数据
 const getGuessLike = async () => {
-  const res = await getHomeGuessLikeAPI(pageParams.value)
+  //判断是否到底部了
+  if (isBottom.value) {
+    return uni.showToast({
+      title: '没有更多了~',
+      icon: 'none',
+    })
+  }
+  const res = await getHomeGuessLikeAPI(pageParams)
   //console.log(res.result.items)
-  guessList.value = res.result.items
+  //下拉追加内容
+  guessList.value = [...guessList.value, ...res.result.items]
+
+  //判断页码是否小于页面的总数
+  if (pageParams.page < res.result.pages) {
+    //更新分页参数中的页码
+    pageParams.page++
+  } else {
+    isBottom.value = true
+  }
 }
 
 //将查询列表数据暴漏给父组件使用

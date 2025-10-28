@@ -54,7 +54,7 @@ const getHotItem = async () => {
 //获取猜你喜欢组件的实例对象
 const guessRef = ref<XtxGuessInstance>()
 const onScrollToLower = () => {
-  console.log('滚动触底了')
+  // console.log('滚动触底了')
   guessRef.value?.getMore()
 }
 
