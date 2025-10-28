@@ -1,7 +1,7 @@
 <template>
-  <view class="index">
-    <CustomNavbar></CustomNavbar>
-  </view>
+  <CustomNavbar></CustomNavbar>
+  <XtxSwiper />
+  <view class="index"> </view>
 </template>
 <script setup lang="ts">
 // 引入自定义导航条组件
