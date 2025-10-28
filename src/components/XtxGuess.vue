@@ -35,7 +35,7 @@ import { onMounted } from 'vue'
 //因为我们在调用接口时设置了分页参数可以不传递这会导致他undefined
 //所以这里我们使用required 来告诉ts 这个pageParams 必须有这两个属性
 const pageParams: Required<PageParams> = {
-  page: 30,
+  page: 1,
   pageSize: 10,
 }
 
