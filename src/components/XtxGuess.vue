@@ -66,12 +66,22 @@ const getGuessLike = async () => {
     isBottom.value = true
   }
 }
+// end -------------------------------------------------------
 
-//将查询列表数据暴漏给父组件使用
+//2. start ===================重置集合中的数据========================
+const resetData = () => {
+  pageParams.page = 1
+  guessList.value = []
+  isBottom.value = false
+}
+
+//2. end----------------------重置数据------------------------
+
+//将查询列表数据暴漏给父组件使用,重置数据函数暴漏给父组件
 defineExpose({
   getMore: getGuessLike,
+  resetData,
 })
-// end -------------------------------------------------------
 
 //这里使用组件挂载完毕 调用
 onMounted(() => {
